@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件网盘</title>
+    <link rel="shortcut icon" href="img/logo.ico">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html {
+            overscroll-behavior-y: contain;
+        }
+        body{
+            max-width:800px;margin:50px auto;padding:20px;
+            font-family:system-ui,Arial,sans-serif;background:#f6f8fa;
+            transition: background 0.8s ease;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* 左上角菜单按钮 */
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            background: rgba(33, 150, 243, 0.8);
+            border: none;
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 0 10px #2196f3;
+            z-index: 100;
+            transition: all 0.2s;
+        }
+        .menu-btn:active {
+            transform: scale(0.95);
+        }
+        /* 侧边菜单面板 */
+        .menu-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            height: 100vh;
+            background: rgba(12, 12, 46, 0.95);
+            box-shadow: 2px 0 15px rgba(0,0,0,0.5);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 99;
+            padding-top: 80px;
+        }
+        .menu-panel.open {
+            transform: translateX(0);
+        }
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 16px 25px;
+            color: #e0e0ff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: none;
+            background: transparent;
+            text-align: left;
+        }
+        .menu-item:hover {
+            background: rgba(33, 150, 243, 0.3);
+        }
+
+        h1{text-align:center;margin:20px 0;color:#24292f;transition: color 0.8s ease;}
+        body.star-bg h1 { color: #ffffff; text-shadow: 0 0 8px #88aaff; }
+        .path-bar{
+            margin-bottom:20px;padding:12px 15px;
+            background:#f1f3f4;border-radius:6px;
+            font-size:20px;font-weight:bold;color:#000;
+            transition: background 0.8s ease, color 0.8s ease;
+        }
+        body.star-bg .path-bar {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+        .item{
+            background:#fff;padding:14px 18px;margin:10px 0;
+            border-radius:8px;box-shadow:0 1px 3px #ddd;
+            display:flex;justify-content:space-between;align-items:center;
+            transition: background 0.8s ease, color 0.8s ease;
+        }
+        body.star-bg .item {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+        }
+        .folder-item{cursor:pointer;}
+        .name-span{font-size:16px;}
+        .btn-group{display:flex;gap:8px;}
+        .btn{
+            padding:6px 12px;border-radius:6px;
+            border:none;cursor:pointer;font-size:14px;
+            text-decoration:none;color:#fff;
+        }
+        .view-btn{background:#28a745;}
+        .down-btn{background:#0969da;}
+        .tip{text-align:center;margin-top:30px;color:#656d76;transition: color 0.8s ease;}
+        body.star-bg .tip { color: #b0c4de; }
+
+        .preview-mask{
+            position:fixed;inset:0;
+            background:rgba(0,0,0,0.6);
+            display:none;align-items:center;justify-content:center;
+            z-index:999;
+        }
+        .preview-win{
+            width:680px;height:520px;background:#fff;
+            border-radius:12px;overflow:hidden;
+            display:flex;flex-direction:column;
+            box-shadow:0 8px 30px rgba(0,0,0,0.2);
+        }
+        .preview-head{
+            padding:14px 20px;border-bottom:1px solid #eee;
+            display:flex;justify-content:space-between;align-items:center;
+        }
+        .preview-title{font-weight:bold;color:#333;}
+        .preview-close{
+            width:28px;height:28px;line-height:28px;
+            text-align:center;border-radius:50%;
+            background:#f5f5f5;cursor:pointer;color:#666;
+        }
+        .preview-body{flex:1;padding:20px;overflow:auto;}
+        .preview-txt{
+            white-space:pre-wrap;word-break:break-all;
+            color:#333;font-size:15px;line-height:1.7;
+        }
+    </style>
+</head>
+<body>
+<!-- 左上角菜单 -->
+<button class="menu-btn" id="menuBtn">☰</button>
+<div class="menu-panel" id="menuPanel">
+    <button class="menu-item" onclick="location.href='guestbook.html'">聊天室</button>
+    <button class="menu-item" onclick="location.href='snake.html'">贪吃蛇</button>
+    <button class="menu-item" onclick="location.href='文件生成工具.html'">文件生成工具</button>
+    <button class="menu-item" onclick="location.href='index.html'">返回首页</button>
+</div> <!-- 你之前就是漏了这一行！ -->
+
+   
+
+    <h1>文件网盘</h1>
+    <div class="path-bar" id="pathBar"></div>
+    <div id="fileList"></div>
+    <p class="tip">仅管理员可上传，游客仅可下载</p>
+    <div style="text-align:center;padding:10px;">
+        总访问：<span id="vnum">0</span>
+    </div>
+
+    <!-- 文件预览弹窗 -->
+    <div class="preview-mask" id="previewMask" onclick="closePreview()">
+        <div class="preview-win" onclick="event.stopPropagation()">
+            <div class="preview-head">
+                <span class="preview-title" id="previewTitle">预览</span>
+                <span class="preview-close" onclick="closePreview()">×</span>
+            </div>
+            <div class="preview-body" id="previewBody">加载中...</div>
+        </div>
+    </div>
+
+<script>
+// 访问统计
+fetch("view.php").then(r=>r.text()).then(d=>{
+document.getElementById("vnum").innerText=d
+})
+
+// 网盘配置
+const USER = "srbtef";
+const REPO = "my-download-site";
+const BRANCH = "main";
+const ROOT_DIR = "dl";
+const PROXY = "https://hk.gh-proxy.org/https:/github.com/srbtef/my-download-site/releases/download/123/";
+
+// 关闭预览
+function closePreview(){
+    document.getElementById("previewMask").style.display = "none";
+}
+
+// 过滤文件类型
+function isBlockFile(name){
+    let n = name.toLowerCase();
+    let img = ['.jpg','.jpeg','.png','.gif','.webp','.bmp'];
+    let doc = ['.doc','.docx','.xls','.xlsx'];
+    let media = ['.mp3','.flac','.wav','.m4a','.mp4','.mkv','.avi','.mov','.flv'];
+    let web = ['.html','.css','.js','.json','.xml','.php'];
+    if(img.some(s=>n.endsWith(s))) return true;
+    if(doc.some(s=>n.endsWith(s))) return true;
+    if(media.some(s=>n.endsWith(s))) return true;
+    if(web.some(s=>n.endsWith(s))) return true;
+    return false;
+}
+
+// 文件图标
+function getFileIcon(name){
+    let n = name.toLowerCase();
+    if(n.endsWith('.zip')||n.endsWith('.rar')||n.endsWith('.7z')||n.endsWith('.tar')||n.endsWith('.gz'))
+        return '📦';
+    if(n.endsWith('.apk')) return '📱';
+    if(n.endsWith('.exe')) return '⚙️';
+    if(n.endsWith('.txt')) return '📃';
+    if(n.endsWith('.pdf')) return '📕';
+    if(n.endsWith('.iso')) return '💿';
+    return '❔';
+}
+
+// 文本预览
+async function openPreview(name, path){
+    const mask = document.getElementById("previewMask");
+    const title = document.getElementById("previewTitle");
+    const body = document.getElementById("previewBody");
+    title.innerText = "预览：" + name;
+    body.innerHTML = "加载中...";
+    mask.style.display = "flex";
+    try {
+        const raw = `https://raw.githubusercontent.com/${USER}/${REPO}/${BRANCH}/${path}/${name}`;
+        const proxyRaw = `https://gh-proxy.com/${raw}`;
+        const res = await fetch(proxyRaw);
+        if(!res.ok) throw new Error("请求失败");
+        const text = await res.text();
+        body.innerHTML = `<div class="preview-txt">${text}</div>`;
+    } catch(e){
+        body.innerHTML = "<div style='color:red'>读取失败</div>";
+    }
+}
+
+// 加载目录
+async function loadFolder(path){
+    const api = `https://api.github.com/repos/${USER}/${REPO}/contents/${path}?ref=${BRANCH}`;
+    const res = await fetch(api);
+    const list = await res.json();
+    const box = document.getElementById("fileList");
+    const bar = document.getElementById("pathBar");
+    box.innerHTML = "";
+    const showPath = path.replace("dl", "").replace(/^\/+/, "");
+    bar.innerText = "路径：/" + showPath;
+    if(path !== ROOT_DIR){
+        const up = path.split("/").slice(0,-1).join("/");
+        box.innerHTML += `<div class="item folder-item" onclick="loadFolder('${up}')"><span class="name-span">📁 返回上级</span></div>`;
+    }
+    const folders = list.filter(i=>i.type==="dir");
+    const files = list.filter(i=>i.type==="file");
+    folders.forEach(f=>{
+        const p = `${path}/${f.name}`;
+        box.innerHTML += `<div class="item folder-item" onclick="loadFolder('${p}')"><span class="name-span">📁 ${f.name}</span></div>`;
+    });
+    files.forEach(f=>{
+        const url = PROXY + f.name;
+        const isTxt = f.name.toLowerCase().endsWith(".txt");
+        let btns = `<a href="${url}" target="_blank" class="btn down-btn">下载</a>`;
+        if(isTxt) btns = `<div class="btn-group"><span class="btn view-btn" onclick="openPreview('${f.name}', '${path}')">预览</span>${btns}</div>`;
+        const icon = getFileIcon(f.name);
+        box.innerHTML += `<div class="item"><span class="name-span">${icon} ${f.name}</span>${btns}</div>`;
+    });
+}
+loadFolder(ROOT_DIR);
+
+// 侧边菜单开关
+const menuBtn = document.getElementById('menuBtn');
+const menuPanel = document.getElementById('menuPanel');
+menuBtn.addEventListener('click',()=>{
+    menuPanel.classList.toggle('open');
+});
+
+window.addEventListener('scroll', checkScroll);
+setInterval(checkScroll, 200);
+</script>
+</body>
+</html>

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0c0c2e, #1a1a4a, #0f0f3d);
+            font-family: "Microsoft Yahei", sans-serif;
+            overflow-x: hidden;
+            padding: 20px 0;
+            position: relative;
+        }
+        /* ========== 左上角三横线菜单 ========== */
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            background: rgba(33, 150, 243, 0.8);
+            border: none;
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 0 10px #2196f3;
+            z-index: 100;
+            transition: all 0.2s;
+        }
+        .menu-btn:active {
+            transform: scale(0.95);
+        }
+        .menu-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            height: 100vh;
+            background: rgba(12, 12, 46, 0.95);
+            box-shadow: 2px 0 15px rgba(0,0,0,0.5);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 99;
+            padding-top: 80px;
+        }
+        .menu-panel.open {
+            transform: translateX(0);
+        }
+        .menu-item {
+            display: block;
+            width: 100%;
+            padding: 16px 25px;
+            color: #e0e0ff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: none;
+            background: transparent;
+            text-align: left;
+        }
+        .menu-item:hover {
+            background: rgba(33, 150, 243, 0.3);
+        }
+        h1 {
+            color: #fff;
+            text-shadow: 0 0 8px #4fc3f7, 0 0 16px #2196f3, 0 0 32px #1976d2;
+            margin-bottom: 12px;
+            letter-spacing: 4px;
+        }
+        .life-box {
+            color: #ff80ab;
+            font-size: 18px;
+            text-shadow: 0 0 6px #ff4081;
+            margin-bottom: 15px;
+        }
+        .info {
+            display: flex;
+            gap: 40px;
+            color: #e0e0ff;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 6px #4fc3f7;
+        }
+        .game-box {
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 
+                0 0 15px #2196f3,
+                0 0 30px #42a5f5,
+                0 0 60px rgba(66, 165, 245, 0.5),
+                inset 0 0 20px rgba(100, 181, 246, 0.2);
+        }
+        #gameCanvas {
+            display: block;
+            border-radius: 12px;
+            background: rgba(10, 15, 40, 0.85);
+        }
+        .tip {
+            margin-top: 20px;
+            color: #b0c4de;
+            text-shadow: 0 0 4px #4fc3f7;
+            font-size: 14px;
+            text-align: center;
+        }
+        .over-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            border-radius: 12px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+        }
+        .over-text {
+            font-size: 36px;
+            color: #ff5252;
+            text-shadow: 0 0 10px #f44336, 0 0 20px #d32f2f;
+        }
+        .restart-btn {
+            padding: 10px 28px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #2196f3, #42a5f5);
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 0 12px #2196f3;
+            transition: all 0.2s;
+        }
+        .restart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 18px #42a5f3;
+        }
+        .ctrl-wrap {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .ctrl-row {
+            display: flex;
+            gap: 15px;
+        }
+        .ctrl-btn {
+            width: 70px;
+            height: 70px;
+            font-size: 28px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(33, 150, 243, 0.8);
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 0 10px #2196f3;
+            transition: all 0.15s;
+        }
+        .ctrl-btn:active {
+            transform: scale(0.92);
+            background: rgba(33, 150, 243, 1);
+        }
+    </style>
+</head>
+<body>
+<!-- 三横线菜单 -->
+<button class="menu-btn" id="menuBtn">☰</button>
+<div class="menu-panel" id="menuPanel">
+    <button class="menu-item" onclick="location.href='index.html'">返回首页</button>
+    <button class="menu-item" onclick="location.href='guestbook.html'">聊天室</button>
+    <button class="menu-item" onclick="initGame();closeMenu();">重新开始</button>
+</div>
+<h1>贪吃蛇</h1>
+<div class="life-box">生命：<span id="lifeNum">3</span> ❤️</div>
+<div class="info">
+    <div>得分：<span id="score">0</span></div>
+    <div>最高分：<span id="maxScore">0</span></div>
+</div>
+<div class="game-box">
+    <canvas id="gameCanvas" width="480" height="480"></canvas>
+    <div class="over-modal" id="overModal">
+        <div class="over-text">游戏结束</div>
+        <button class="restart-btn" id="restartBtn">重新开始</button>
+    </div>
+</div>
+<div class="tip">操作：PC 方向键 / 手机点击按键 | ❤爱心加生命 | ⚫黑洞释放9×9大范围吸力吞噬食物</div>
+<div class="ctrl-wrap">
+    <div class="ctrl-row">
+        <button class="ctrl-btn" data-dir="up">↑</button>
+    </div>
+    <div class="ctrl-row">
+        <button class="ctrl-btn" data-dir="left">←</button>
+        <button class="ctrl-btn" data-dir="down">↓</button>
+        <button class="ctrl-btn" data-dir="right">→</button>
+    </div>
+</div>
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreDom = document.getElementById('score');
+    const maxScoreDom = document.getElementById('maxScore');
+    const lifeDom = document.getElementById('lifeNum');
+    const overModal = document.getElementById('overModal');
+    const restartBtn = document.getElementById('restartBtn');
+    const grid = 20;
+    const foodCount = 80;
+    const heartCount = 8;
+    const blackHoleCount = 4;
+    // 9×9吸附区域：中心格子上下左右各4格
+    const holeHalfRange = 4;
+
+    let snake = [];
+    let foodList = [];
+    let heartList = [];
+    let holeList = [];
+    let dir = { x: 1, y: 0 };
+    let nextDir = { x: 1, y: 0 };
+    let score = 0;
+    let maxScore = localStorage.getItem('snakeMax') || 0;
+    let life = 3;
+    let gameRun = true;
+    let holeCooldown = false;
+    // 黑洞吸附动画变量
+    let activeAbsorb = null;
+    let absorbAnimRadius = 0;
+
+    maxScoreDom.innerText = maxScore;
+    lifeDom.innerText = life;
+
+    function initGame() {
+        snake = [
+            { x: 10, y: 10 },
+            { x: 9, y: 10 },
+            { x: 8, y: 10 }
+        ];
+        dir = { x: 1, y: 0 };
+        nextDir = { x: 1, y: 0 };
+        score = 0;
+        life = 3;
+        scoreDom.innerText = 0;
+        lifeDom.innerText = life;
+        gameRun = true;
+        overModal.style.display = 'none';
+        holeCooldown = false;
+        activeAbsorb = null;
+        absorbAnimRadius = 0;
+
+        foodList = [];
+        heartList = [];
+        holeList = [];
+        for (let i = 0; i < foodCount; i++) createFood();
+        for (let i = 0; i < heartCount; i++) createHeart();
+        for (let i = 0; i < blackHoleCount; i++) createBlackHole();
+    }
+
+    // 普通食物生成
+    function createFood() {
+        let newFood;
+        while (true) {
+            newFood = {
+                x: Math.floor(Math.random() * (canvas.width / grid)),
+                y: Math.floor(Math.random() * (canvas.height / grid))
+            };
+            let isConflict = checkAllConflict(newFood);
+            if (!isConflict) break;
+        }
+        foodList.push(newFood);
+    }
+
+    // 爱心道具生成
+    function createHeart() {
+        let newHeart;
+        while (true) {
+            newHeart = {
+                x: Math.floor(Math.random() * (canvas.width / grid)),
+                y: Math.floor(Math.random() * (canvas.height / grid))
+            };
+            let isConflict = checkAllConflict(newHeart);
+            if (!isConflict) break;
+        }
+        heartList.push(newHeart);
+    }
+
+    // 黑洞道具生成
+    function createBlackHole() {
+        if (holeCooldown) return;
+        let newHole;
+        while (true) {
+            newHole = {
+                x: Math.floor(Math.random() * (canvas.width / grid)),
+                y: Math.floor(Math.random() * (canvas.height / grid))
+            };
+            let isConflict = checkAllConflict(newHole);
+            if (!isConflict) break;
+        }
+        holeList.push(newHole);
+    }
+
+    // 坐标冲突检测
+    function checkAllConflict(pos) {
+        let conflict = false;
+        snake.forEach(body => { if (body.x === pos.x && body.y === pos.y) conflict = true; });
+        foodList.forEach(f => { if (f.x === pos.x && f.y === pos.y) conflict = true; });
+        heartList.forEach(h => { if (h.x === pos.x && h.y === pos.y) conflict = true; });
+        holeList.forEach(ho => { if (ho.x === pos.x && ho.y === pos.y) conflict = true; });
+        return conflict;
+    }
+
+    // 绘制普通圆角方块（蛇、普通食物）
+    function drawBlock(x, y, color, glowColor) {
+        const px = x * grid; const py = y * grid;
+        ctx.save();
+        ctx.shadowColor = glowColor; ctx.shadowBlur = 12;
+        const grad = ctx.createLinearGradient(px, py, px + grid, py + grid);
+        grad.addColorStop(0, color); grad.addColorStop(1, glowColor);
+        ctx.fillStyle = grad;
+        ctx.fillRect(px + 1, py + 1, grid - 2, grid - 2);
+        ctx.restore();
+    }
+
+    // 绘制爱心图标
+    function drawHeartIcon(x, y) {
+        const cx = x * grid + grid / 2;
+        const cy = y * grid + grid / 2;
+        const size = grid * 0.38;
+        ctx.save();
+        ctx.shadowColor = "#ff4081";
+        ctx.shadowBlur = 14;
+        ctx.fillStyle = "#ff4081";
+        ctx.beginPath();
+        ctx.moveTo(cx, cy + size * 0.3);
+        ctx.bezierCurveTo(
+            cx - size, cy - size * 0.6,
+            cx - size, cy - size * 1.2,
+            cx, cy - size * 0.5
+        );
+        ctx.bezierCurveTo(
+            cx + size, cy - size * 1.2,
+            cx + size, cy - size * 0.6,
+            cx, cy + size * 0.3
+        );
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // 绘制黑洞图标
+    function drawBlackHoleIcon(x, y) {
+        const cx = x * grid + grid / 2;
+        const cy = y * grid + grid / 2;
+        const outerR = grid * 0.42;
+        const innerR = grid * 0.18;
+        ctx.save();
+        ctx.shadowColor = "#9c27b0";
+        ctx.shadowBlur = 16;
+        const ringGrad = ctx.createRadialGradient(cx, cy, innerR, cx, cy, outerR);
+        ringGrad.addColorStop(0, "#220033");
+        ringGrad.addColorStop(1, "#9c27b0");
+        ctx.fillStyle = ringGrad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#000000";
+        ctx.beginPath();
+        ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // 绘制黑洞吸附动画外圈（9×9范围可视化）
+    function drawAbsorbRing() {
+        if (!activeAbsorb) return;
+        const centerX = activeAbsorb.x * grid + grid / 2;
+        const centerY = activeAbsorb.y * grid + grid / 2;
+        const maxPixelRange = holeHalfRange * grid;
+        ctx.save();
+        ctx.shadowColor = "#9c27b0";
+        ctx.shadowBlur = 20;
+        ctx.strokeStyle = "rgba(156, 39, 176, 0.7)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, absorbAnimRadius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function draw() {
+        ctx.fillStyle = 'rgba(10, 15, 40, 0.7)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // 吸附动画圈优先绘制底层
+        drawAbsorbRing();
+        // 普通食物方块
+        foodList.forEach(food => drawBlock(food.x, food.y, '#ff6e40', '#ffab91'));
+        // 爱心图标
+        heartList.forEach(heart => drawHeartIcon(heart.x, heart.y));
+        // 黑洞图标
+        holeList.forEach(hole => drawBlackHoleIcon(hole.x, hole.y));
+        // 蛇
+        snake.forEach((body, idx) => {
+            if (idx === 0) drawBlock(body.x, body.y, '#00e676', '#69f0ae');
+            else drawBlock(body.x, body.y, '#2979ff', '#82b1ff');
+        });
+    }
+
+    // 判断食物是否在9×9黑洞吸附范围内
+    function isInAbsorbRange(holePos, foodPos) {
+        const dx = Math.abs(foodPos.x - holePos.x);
+        const dy = Math.abs(foodPos.y - holePos.y);
+        return dx <= holeHalfRange && dy <= holeHalfRange;
+    }
+
+    // 触发黑洞吸力逻辑
+    function triggerBlackHoleAbsorb(holePos) {
+        activeAbsorb = holePos;
+        absorbAnimRadius = 0;
+        const maxPixelRange = holeHalfRange * grid;
+        // 扩散动画
+        const expandAnim = setInterval(() => {
+            absorbAnimRadius += 4;
+            if (absorbAnimRadius >= maxPixelRange) {
+                clearInterval(expandAnim);
+                // 动画扩散完成后吞噬范围内食物
+                let eatCount = 0;
+                foodList = foodList.filter(food => {
+                    if (isInAbsorbRange(holePos, food)) {
+                        eatCount++;
+                        return false;
+                    }
+                    return true;
+                });
+                // 加分+加长蛇身
+                score += eatCount;
+                scoreDom.innerText = score;
+                for (let i = 0; i < eatCount; i++) {
+                    snake.push({ ...snake[snake.length - 1] });
+                }
+                // 收缩动画
+                const shrinkAnim = setInterval(() => {
+                    absorbAnimRadius -= 6;
+                    if (absorbAnimRadius <= 0) {
+                        clearInterval(shrinkAnim);
+                        activeAbsorb = null;
+                    }
+                }, 20);
+            }
+        }, 20);
+    }
+
+    function move() {
+        if (!gameRun) return;
+        dir = { ...nextDir };
+        const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+        let hitSelf = false;
+        snake.forEach(body => { if (head.x === body.x && head.y === body.y) hitSelf = true; });
+        // 撞墙/撞身体
+        if (head.x < 0 || head.x >= canvas.width / grid || head.y < 0 || head.y >= canvas.height / grid || hitSelf) {
+            life--;
+            lifeDom.innerText = life;
+            if (life <= 0) {
+                gameOver();
+            }
+            // 有剩余生命：不重置蛇、不改变长度、不清分，直接停止本次移动
+            return;
+        }
+        snake.unshift(head);
+
+        // 拾取爱心
+        let eatHeartIdx = -1;
+        heartList.forEach((h, idx) => { if (head.x === h.x && head.y === h.y) eatHeartIdx = idx; });
+        if (eatHeartIdx > -1) {
+            heartList.splice(eatHeartIdx, 1);
+            life++;
+            lifeDom.innerText = life;
+            createHeart();
+        }
+
+        // 拾取黑洞道具
+        let eatHoleIdx = -1;
+        let targetHole = null;
+        holeList.forEach((h, idx) => {
+            if (head.x === h.x && head.y === h.y) {
+                eatHoleIdx = idx;
+                targetHole = h;
+            }
+        });
+        if (eatHoleIdx > -1 && targetHole) {
+            holeList.splice(eatHoleIdx, 1);
+            // 启动9×9范围吸附
+            triggerBlackHoleAbsorb(targetHole);
+            holeCooldown = true;
+            setTimeout(() => {
+                holeCooldown = false;
+                createBlackHole();
+            }, 3000);
+            // 补充新食物
+            for (let i = 0; i < foodCount; i++) createFood();
+        }
+
+        // 拾取普通食物
+        let eatIndex = -1;
+        foodList.forEach((food, idx) => { if (head.x === food.x && head.y === food.y) eatIndex = idx; });
+        if (eatIndex > -1) {
+            foodList.splice(eatIndex, 1);
+            createFood();
+            score++;
+            scoreDom.innerText = score;
+        } else {
+            snake.pop();
+        }
+    }
+
+    function gameOver() {
+        gameRun = false;
+        overModal.style.display = 'flex';
+        if (score > maxScore) {
+            maxScore = score;
+            localStorage.setItem('snakeMax', maxScore);
+            maxScoreDom.innerText = maxScore;
+        }
+    }
+
+    // 键盘控制
+    document.addEventListener('keydown', e => {
+        const key = e.key;
+        if (key === 'ArrowUp' && dir.y !== 1) nextDir = { x: 0, y: -1 };
+        if (key === 'ArrowDown' && dir.y !== -1) nextDir = { x: 0, y: 1 };
+        if (key === 'ArrowLeft' && dir.x !== 1) nextDir = { x: -1, y: 0 };
+        if (key === 'ArrowRight' && dir.x !== -1) nextDir = { x: 1, y: 0 };
+    });
+
+    // 手机按键控制
+    document.querySelectorAll('.ctrl-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const d = this.dataset.dir;
+            if (d === 'up' && dir.y !== 1) nextDir = { x: 0, y: -1 };
+            if (d === 'down' && dir.y !== -1) nextDir = { x: 0, y: 1 };
+            if (d === 'left' && dir.x !== 1) nextDir = { x: -1, y: 0 };
+            if (d === 'right' && dir.x !== -1) nextDir = { x: 1, y: 0 };
+        });
+    });
+
+    restartBtn.addEventListener('click', initGame);
+
+    function gameLoop() { move(); draw(); setTimeout(gameLoop, 120); }
+    initGame(); gameLoop();
+
+    // 侧边菜单逻辑
+    const menuBtn = document.getElementById('menuBtn');
+    const menuPanel = document.getElementById('menuPanel');
+    function closeMenu() { menuPanel.classList.remove('open'); }
+    menuBtn.addEventListener('click', () => { menuPanel.classList.toggle('open'); });
+</script>
+</body>
+</html>
