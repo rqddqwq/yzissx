@@ -151,7 +151,7 @@ body{
   z-index:4.5;
   width:1400px;
   height:1400px;
-  /* 遮罩：和黄色圆环一模一样的动画，圆环到哪文字显示哪 */
+  position:relative;/* 关键：子元素以此容器为原点 */
   mask-image: radial-gradient(circle, transparent 0%, transparent calc(var(--r) -14px), #fff calc(var(--r) -14px), #fff var(--r), transparent var(--r));
   -webkit-mask-image: radial-gradient(circle, transparent 0%, transparent calc(var(--r) -14px), #fff calc(var(--r) -14px), #fff var(--r), transparent var(--r));
   --r:0px;
@@ -163,7 +163,7 @@ body{
   100% { --r:600px; }
 }
 
-/* 分散四处的多行文本，参差不齐，围绕核心四周 */
+/* 分散四处的多行文本，参差不齐，围绕核心四周，全部用left/top */
 .dev-text-item{
   position:absolute;
   color:#664422;
@@ -171,27 +171,28 @@ body{
   line-height:1.6;
   white-space:pre-line;
 }
-/* 左上 */
+/* 左上：核心的左上方 */
 .tl{
   top:-320px;
   left:-420px;
 }
-/* 右上 */
+/* 右上：核心的右上方 */
 .tr{
   top:-280px;
-  right:-380px;
+  left:280px;
 }
-/* 左下 */
+/* 左下：核心的左下方 */
 .bl{
-  bottom:-340px;
+  top:260px;
   left:-360px;
 }
-/* 右下 */
+/* 右下：核心的右下方 */
 .br{
-  bottom:-300px;
-  right:-400px;
+  top:300px;
+  left:320px;
 }
 /* ===== 扩散显示文字区域 end ===== */
+
 
 .btn-container{
   position:absolute;
