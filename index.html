@@ -42,11 +42,15 @@ body{
   animation:coreZoomFall 4.2s ease-out forwards;
 }
 
-/* 降落时同时从斜角转正，火焰才对得上 */
+/* 缩放+旋转过头，末尾回弹回正；火焰放在容器内，跟随一起转 */
 @keyframes coreZoomFall{
   0%{
     transform:translate(-50%,-50%) scale(2.2) rotate(45deg);
     opacity:0.25;
+  }
+  85%{
+    transform:translate(-50%,-50%) scale(1) rotate(-8deg);
+    opacity:1;
   }
   100%{
     transform:translate(-50%,-50%) scale(1) rotate(0deg);
@@ -64,7 +68,7 @@ body{
   filter:drop-shadow(0 0 30px rgba(80,145,255,0.55));
 }
 
-/* 四个引擎火焰，降落全程点火，落地熄灭 */
+/* 引擎火焰，放在core-wrap内部，跟随核心整体旋转 */
 .flame{
   position:absolute;
   width:36px;
@@ -74,40 +78,16 @@ body{
   opacity:0.85;
   animation:flamePulse 0.45s ease-in-out infinite alternate, flameCut 0s ease forwards 4.2s;
 }
-@keyframes flameCut{
-  to{opacity:0;}
-}
+@keyframes flameCut{to{opacity:0;}}
 @keyframes flamePulse{
-  0%{
-    transform:scale(0.85);
-    filter:blur(4px);
-  }
-  100%{
-    transform:scale(1.15);
-    filter:blur(7px);
-  }
+  0%{transform:scale(0.85);filter:blur(4px);}
+  100%{transform:scale(1.15);filter:blur(7px);}
 }
 
-.flame.f1{
-  left:-22px;
-  top:50%;
-  transform:translateY(-50%);
-}
-.flame.f2{
-  right:-22px;
-  top:50%;
-  transform:translateY(-50%);
-}
-.flame.f3{
-  top:-22px;
-  left:50%;
-  transform:translateX(-50%);
-}
-.flame.f4{
-  bottom:-22px;
-  left:50%;
-  transform:translateX(-50%);
-}
+.flame.f1{left:-22px;top:50%;transform:translateY(-50%);}
+.flame.f2{right:-22px;top:50%;transform:translateY(-50%);}
+.flame.f3{top:-22px;left:50%;transform:translateX(-50%);}
+.flame.f4{bottom:-22px;left:50%;transform:translateX(-50%);}
 
 .wave-ring-wrap{
   position:absolute;
@@ -117,7 +97,7 @@ body{
   z-index:6;
   pointer-events:none;
   opacity:0;
-  animation:waveShow 0s ease forwards 4.4s;
+  animation:waveShow 0s ease forwards 4.2s;
 }
 .wave-ring{
   position:absolute;
@@ -130,20 +110,10 @@ body{
   border-radius:50%;
   animation:ringExpand 3.2s ease-out forwards;
 }
-@keyframes waveShow{
-  to{opacity:1;}
-}
+@keyframes waveShow{to{opacity:1;}}
 @keyframes ringExpand{
-  0%{
-    width:20px;
-    height:20px;
-    opacity:0.9;
-  }
-  100%{
-    width:520px;
-    height:520px;
-    opacity:0;
-  }
+  0%{width:20px;height:20px;opacity:0.9;}
+  100%{width:520px;height:520px;opacity:0;}
 }
 
 .dev-name{
@@ -158,17 +128,11 @@ body{
   letter-spacing:6px;
   text-shadow:0 0 12px rgba(80,145,255,0.35);
   opacity:0;
-  animation:nameFadeIn 3s ease-out forwards 4.8s;
+  animation:nameFadeIn 3s ease-out forwards 4.6s;
 }
 @keyframes nameFadeIn{
-  0%{
-    opacity:0;
-    transform:translate(-50%,-50%) scale(0.85);
-  }
-  100%{
-    opacity:0.88;
-    transform:translate(-50%,-50%) scale(1);
-  }
+  0%{opacity:0;transform:translate(-50%,-50%) scale(0.85);}
+  100%{opacity:0.88;transform:translate(-50%,-50%) scale(1);}
 }
 
 .btn-container{
@@ -194,27 +158,13 @@ body{
   border-color:rgba(80,145,255,0.75);
   transform:translateY(-2px);
 }
-.detail-btn:active{
-  transform:translateY(0);
-}
+.detail-btn:active{transform:translateY(0);}
 
 @media(max-width:768px){
-  .core-wrap{
-    width:170px;
-    height:170px;
-  }
-  .dev-name{
-    font-size:24px;
-    letter-spacing:3px;
-  }
-  .btn-container{
-    left:50%;
-    transform:translateX(-50%);
-  }
-  .detail-btn{
-    width:280px;
-    text-align:center;
-  }
+  .core-wrap{width:170px;height:170px;}
+  .dev-name{font-size:24px;letter-spacing:3px;}
+  .btn-container{left:50%;transform:translateX(-50%);}
+  .detail-btn{width:280px;text-align:center;}
 }
 </style>
 </head>
@@ -223,6 +173,7 @@ body{
 
 <div class="core-wrap">
   <div class="core"></div>
+  <!--火焰放在core-wrap内部，跟随核心一起旋转，引擎口永远对齐火焰-->
   <div class="flame f1"></div>
   <div class="flame f2"></div>
   <div class="flame f3"></div>
