@@ -142,13 +142,13 @@ body{
   }
 }
 
-/* ===== 开发者文字：默认隐藏，光圈扫到才显示 ===== */
+/* ===== 文字容器，锚定核心中心点 ===== */
 .dev-text-wrap{
   position:absolute;
   left:50%;
   top:50%;
-  width:0;
-  height:0;
+  width:1400px;
+  height:1400px;
   transform:translate(-50%,-50%);
   z-index:4.5;
   pointer-events:none;
@@ -161,25 +161,33 @@ body{
   line-height:1.6;
   white-space:pre-line;
   opacity:0;
-  transition:opacity 0.8s ease-out;
+  animation:textFade 1.2s ease-out forwards;
 }
-
-/* 全部围绕核心旁边，不再跑角落 */
+/* 每个文字的触发延时，对应光圈向外扩张，基准延时2s，和光圈启动完全对齐 */
 .dev-text-item.tl{
   top:-130px;
   left:-170px;
+  animation-delay:2.4s;
 }
 .dev-text-item.tr{
   top:-110px;
   left:140px;
+  animation-delay:2.8s;
 }
 .dev-text-item.bl{
   top:100px;
   left:-150px;
+  animation-delay:3.2s;
 }
 .dev-text-item.br{
   top:120px;
   left:130px;
+  animation-delay:3.6s;
+}
+
+@keyframes textFade{
+  0%{opacity:0;}
+  100%{opacity:1;}
 }
 
 .btn-container{
@@ -232,22 +240,18 @@ body{
 </head>
 <body>
 <div class="star-bg"></div>
-
 <div class="yellow-circle"></div>
 
 <div class="dev-text-wrap">
   <div class="dev-text-item tl">【代码编写】
 玄钢重工Mod
 版本开发</div>
-
   <div class="dev-text-item tr">【美术资源】
 星球环带
 方块贴图</div>
-
   <div class="dev-text-item bl">【逻辑实现】
 市场系统
 方块行为</div>
-
   <div class="dev-text-item br">【测试调试】
 安卓端适配
 性能优化</div>
@@ -267,29 +271,9 @@ body{
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function(){
-  const circle = document.querySelector(".yellow-circle");
-  const textWrap = document.querySelector(".dev-text-wrap");
-  const items = document.querySelectorAll(".dev-text-item");
-
-  // 四个文字分别在光圈扩散到不同距离时才显示
-  const thresholds = [220, 260, 300, 340];
-
-  circle.addEventListener("animationstart", function(){
-    textWrap.style.width = "1400px";
-    textWrap.style.height = "1400px";
-
-    items.forEach((item, index) => {
-      setTimeout(() => {
-        item.style.opacity = "1";
-      }, thresholds[index]);
-    });
-  });
-
-  document.getElementById("viewBtn").onclick = () => {
-    alert("登陆区块｜查看详情逻辑");
-  };
-});
+document.getElementById("viewBtn").onclick = ()=>{
+  alert("登陆区块｜查看详情逻辑");
+};
 </script>
 </body>
 </html>
