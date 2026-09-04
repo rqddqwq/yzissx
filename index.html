@@ -42,15 +42,11 @@ body{
   animation:coreZoomFall 4.2s ease-out forwards;
 }
 
-/* 缩放+旋转过头，末尾回弹回正；火焰放在容器内，跟随一起转 */
+/* 单向顺时针 45deg → 0deg，无反向甩动 */
 @keyframes coreZoomFall{
   0%{
     transform:translate(-50%,-50%) scale(2.2) rotate(45deg);
     opacity:0.25;
-  }
-  85%{
-    transform:translate(-50%,-50%) scale(1) rotate(-8deg);
-    opacity:1;
   }
   100%{
     transform:translate(-50%,-50%) scale(1) rotate(0deg);
@@ -68,11 +64,10 @@ body{
   filter:drop-shadow(0 0 30px rgba(80,145,255,0.55));
 }
 
-/* 引擎火焰，放在core-wrap内部，跟随核心整体旋转 */
 .flame{
   position:absolute;
-  width:36px;
-  height:36px;
+  width:38px;
+  height:38px;
   border-radius:50%;
   background:radial-gradient(circle,#ffdd77,#ff8833,transparent);
   opacity:0.85;
@@ -80,14 +75,15 @@ body{
 }
 @keyframes flameCut{to{opacity:0;}}
 @keyframes flamePulse{
-  0%{transform:scale(0.85);filter:blur(4px);}
-  100%{transform:scale(1.15);filter:blur(7px);}
+  0%{scale:0.85;filter:blur(4px);}
+  100%{scale:1.15;filter:blur(7px);}
 }
 
-.flame.f1{left:-22px;top:50%;transform:translateY(-50%);}
-.flame.f2{right:-22px;top:50%;transform:translateY(-50%);}
-.flame.f3{top:-22px;left:50%;transform:translateX(-50%);}
-.flame.f4{bottom:-22px;left:50%;transform:translateX(-50%);}
+/* 移除火焰自身transform，全部交给父容器旋转，解决单个火焰错位 */
+.flame.f1{left:-24px;top:50%;margin-top:-19px;}
+.flame.f2{right:-24px;top:50%;margin-top:-19px;}
+.flame.f3{top:-24px;left:50%;margin-left:-19px;}
+.flame.f4{bottom:-24px;left:50%;margin-left:-19px;}
 
 .wave-ring-wrap{
   position:absolute;
@@ -173,7 +169,6 @@ body{
 
 <div class="core-wrap">
   <div class="core"></div>
-  <!--火焰放在core-wrap内部，跟随核心一起旋转，引擎口永远对齐火焰-->
   <div class="flame f1"></div>
   <div class="flame f2"></div>
   <div class="flame f3"></div>
