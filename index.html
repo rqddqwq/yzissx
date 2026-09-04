@@ -77,14 +77,8 @@ body{
   animation:nameFadeIn 3s ease-out forwards 4.6s;
 }
 @keyframes nameFadeIn{
-  0%{
-    opacity:0;
-    transform:translateX(-50%) scale(0.9);
-  }
-  100%{
-    opacity:0.88;
-    transform:translateX(-50%) scale(1);
-  }
+  0%{opacity:0;transform:translateX(-50%) scale(0.9);}
+  100%{opacity:0.88;transform:translateX(-50%) scale(1);}
 }
 
 .flame{
@@ -96,20 +90,11 @@ body{
   opacity:0.85;
   animation:flamePulse 0.45s ease-in-out infinite alternate, flameCut 0s ease forwards 4.2s;
 }
-@keyframes flameCut{
-  to{opacity:0;}
-}
+@keyframes flameCut{to{opacity:0;}}
 @keyframes flamePulse{
-  0%{
-    scale:0.85;
-    filter:blur(4px);
-  }
-  100%{
-    scale:1.15;
-    filter:blur(7px);
-  }
+  0%{scale:0.85;filter:blur(4px);}
+  100%{scale:1.15;filter:blur(7px);}
 }
-
 .flame.f1{left:-24px;top:50%;margin-top:-19px;}
 .flame.f2{right:-24px;top:50%;margin-top:-19px;}
 .flame.f3{top:-24px;left:50%;margin-left:-19px;}
@@ -128,31 +113,12 @@ body{
   opacity:0;
   animation:circleSpread 15s ease-out forwards 2.0s;
 }
-
 @keyframes circleSpread{
-  0%{
-    width:0px;
-    height:0px;
-    opacity:1;
-  }
-  100%{
-    width:1200px;
-    height:1200px;
-    opacity:0;
-  }
+  0%{width:0;height:0;opacity:1;}
+  100%{width:1200px;height:1200px;opacity:0;}
 }
 
-.dev-text-wrap{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:1400px;
-  height:1400px;
-  transform:translate(-50%,-50%);
-  z-index:4.5;
-  pointer-events:none;
-}
-
+/* ==========文字直接放在core-wrap内部，坐标相对于方块========== */
 .dev-text-item{
   position:absolute;
   color:#664422;
@@ -161,33 +127,30 @@ body{
   white-space:pre-line;
   opacity:0;
   animation:textFade 1.0s ease-out forwards;
+  pointer-events:none;
 }
+@keyframes textFade{0%{opacity:0;}100%{opacity:1;}}
 
-/* 【紧贴核心，全部小数值】 */
-.dev-text-item.tl{
-  top:-160px;
-  left:-140px;
+/* 全部相对于方块(220×220)，紧贴四周 */
+.tl{
+  top:-140px;
+  left:-130px;
   animation-delay:2.4s;
 }
-.dev-text-item.tr{
-  top:-160px;
-  left:80px;
+.tr{
+  top:-140px;
+  left:230px;
   animation-delay:2.8s;
 }
-.dev-text-item.bl{
-  top:110px;
-  left:-140px;
+.bl{
+  top:240px;
+  left:-130px;
   animation-delay:3.2s;
 }
-.dev-text-item.br{
-  top:110px;
-  left:80px;
+.br{
+  top:240px;
+  left:230px;
   animation-delay:3.6s;
-}
-
-@keyframes textFade{
-  0%{opacity:0;}
-  100%{opacity:1;}
 }
 
 .btn-container{
@@ -213,28 +176,13 @@ body{
   border-color:rgba(80,145,255,0.75);
   transform:translateY(-2px);
 }
-.detail-btn:active{
-  transform:translateY(0);
-}
+.detail-btn:active{transform:translateY(0);}
 
 @media(max-width:768px){
-  .core-wrap{
-    width:170px;
-    height:170px;
-  }
-  .dev-name{
-    font-size:24px;
-    letter-spacing:3px;
-    bottom:calc(100% + 12px);
-  }
-  .btn-container{
-    left:50%;
-    transform:translateX(-50%);
-  }
-  .detail-btn{
-    width:280px;
-    text-align:center;
-  }
+  .core-wrap{width:170px;height:170px;}
+  .dev-name{font-size:24px;letter-spacing:3px;bottom:calc(100% + 12px);}
+  .btn-container{left:50%;transform:translateX(-50%);}
+  .detail-btn{width:280px;text-align:center;}
 }
 </style>
 </head>
@@ -242,7 +190,15 @@ body{
 <div class="star-bg"></div>
 <div class="yellow-circle"></div>
 
-<div class="dev-text-wrap">
+<div class="core-wrap">
+  <div class="dev-name">DEVELOPER NAME</div>
+  <div class="core"></div>
+  <div class="flame f1"></div>
+  <div class="flame f2"></div>
+  <div class="flame f3"></div>
+  <div class="flame f4"></div>
+
+  <!-- 文字直接放进core-wrap里面，跟随方块 -->
   <div class="dev-text-item tl">【代码编写】
 玄钢重工Mod
 版本开发</div>
@@ -255,15 +211,6 @@ body{
   <div class="dev-text-item br">【测试调试】
 安卓端适配
 性能优化</div>
-</div>
-
-<div class="core-wrap">
-  <div class="dev-name">DEVELOPER NAME</div>
-  <div class="core"></div>
-  <div class="flame f1"></div>
-  <div class="flame f2"></div>
-  <div class="flame f3"></div>
-  <div class="flame f4"></div>
 </div>
 
 <div class="btn-container">
