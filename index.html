@@ -31,22 +31,23 @@ body{
   100%{background-position:0 -220px;}
 }
 
+/* 始终固定屏幕正中心，只用scale做远近降落，不上下偏移 */
 .core-wrap{
   position:absolute;
   left:50%;
-  top:0;
+  top:50%;
   width:220px;
   height:220px;
-  transform:translateX(-50%);
+  transform:translate(-50%,-50%);
   z-index:5;
-  animation:coreSlowFall 4.2s ease-out forwards;
+  animation:coreZoomFall 4.2s ease-out forwards;
 }
-@keyframes coreSlowFall{
-  0%{transform:translateX(-50%) translateY(-180px);opacity:0.2;}
-  100%{transform:translateX(-50%) translateY(120px);opacity:1;}
+/* 大→缩小，模拟从远处降落，位置永远居中 */
+@keyframes coreZoomFall{
+  0%{transform:translate(-50%,-50%) scale(2.2);opacity:0.25;}
+  100%{transform:translate(-50%,-50%) scale(1);opacity:1;}
 }
 
-/* 读取同目录 img.png 核心贴图 */
 .core{
   width:100%;
   height:100%;
@@ -57,10 +58,11 @@ body{
   filter:drop-shadow(0 0 30px rgba(80,145,255,0.55));
 }
 
+/* 波纹严格屏幕中心点 */
 .wave-ring-wrap{
   position:absolute;
   left:50%;
-  top:calc(50% + 120px);
+  top:50%;
   transform:translate(-50%,-50%);
   z-index:6;
   pointer-events:none;
@@ -89,7 +91,7 @@ body{
 .dev-name{
   position:absolute;
   left:50%;
-  top:calc(50% + 120px);
+  top:50%;
   transform:translate(-50%,-50%);
   z-index:7;
   pointer-events:none;
