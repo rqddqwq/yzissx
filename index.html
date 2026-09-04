@@ -142,7 +142,6 @@ body{
   }
 }
 
-/* ===== 文字容器，锚定核心中心点 ===== */
 .dev-text-wrap{
   position:absolute;
   left:50%;
@@ -157,31 +156,32 @@ body{
 .dev-text-item{
   position:absolute;
   color:#664422;
-  font-size:18px;
-  line-height:1.6;
+  font-size:16px;
+  line-height:1.5;
   white-space:pre-line;
   opacity:0;
-  animation:textFade 1.2s ease-out forwards;
+  animation:textFade 1.0s ease-out forwards;
 }
-/* 每个文字的触发延时，对应光圈向外扩张，基准延时2s，和光圈启动完全对齐 */
+
+/* 【紧贴核心，全部小数值】 */
 .dev-text-item.tl{
-  top:-130px;
-  left:-170px;
+  top:-160px;
+  left:-140px;
   animation-delay:2.4s;
 }
 .dev-text-item.tr{
-  top:-110px;
-  left:140px;
+  top:-160px;
+  left:80px;
   animation-delay:2.8s;
 }
 .dev-text-item.bl{
-  top:100px;
-  left:-150px;
+  top:110px;
+  left:-140px;
   animation-delay:3.2s;
 }
 .dev-text-item.br{
-  top:120px;
-  left:130px;
+  top:110px;
+  left:80px;
   animation-delay:3.6s;
 }
 
