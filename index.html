@@ -142,6 +142,57 @@ body{
   }
 }
 
+/* ===== 扩散显示文字区域 start ===== */
+.dev-text-wrap{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  z-index:4.5;
+  width:1400px;
+  height:1400px;
+  /* 遮罩：和黄色圆环一模一样的动画，圆环到哪文字显示哪 */
+  mask-image: radial-gradient(circle, transparent 0%, transparent calc(var(--r) -14px), #fff calc(var(--r) -14px), #fff var(--r), transparent var(--r));
+  -webkit-mask-image: radial-gradient(circle, transparent 0%, transparent calc(var(--r) -14px), #fff calc(var(--r) -14px), #fff var(--r), transparent var(--r));
+  --r:0px;
+  animation:maskAnim 15s ease-out forwards 2.0s;
+  pointer-events:none;
+}
+@keyframes maskAnim {
+  0% { --r:0px; }
+  100% { --r:600px; }
+}
+
+/* 分散四处的多行文本，参差不齐，围绕核心四周 */
+.dev-text-item{
+  position:absolute;
+  color:#664422;
+  font-size:18px;
+  line-height:1.6;
+  white-space:pre-line;
+}
+/* 左上 */
+.tl{
+  top:-320px;
+  left:-420px;
+}
+/* 右上 */
+.tr{
+  top:-280px;
+  right:-380px;
+}
+/* 左下 */
+.bl{
+  bottom:-340px;
+  left:-360px;
+}
+/* 右下 */
+.br{
+  bottom:-300px;
+  right:-400px;
+}
+/* ===== 扩散显示文字区域 end ===== */
+
 .btn-container{
   position:absolute;
   left:4vw;
@@ -194,6 +245,25 @@ body{
 <div class="star-bg"></div>
 
 <div class="yellow-circle"></div>
+
+<!-- 扩散触发显示的多行开发者文本 -->
+<div class="dev-text-wrap">
+  <div class="dev-text-item tl">【代码编写】
+玄钢重工Mod
+版本开发</div>
+
+  <div class="dev-text-item tr">【美术资源】
+星球环带
+方块贴图</div>
+
+  <div class="dev-text-item bl">【逻辑实现】
+市场系统
+方块行为</div>
+
+  <div class="dev-text-item br">【测试调试】
+安卓端适配
+性能优化</div>
+</div>
 
 <div class="core-wrap">
   <div class="dev-name">DEVELOPER NAME</div>
