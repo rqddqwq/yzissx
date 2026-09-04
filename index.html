@@ -127,11 +127,34 @@ body{
   z-index:4.5;
   pointer-events:none;
   opacity:0;
+  animation:textFade 1.2s ease-out forwards;
 }
-.tl{top:-140px;left:-130px;}
-.tr{top:-140px;left:230px;}
-.bl{top:240px;left:-130px;}
-.br{top:240px;left:230px;}
+@keyframes textFade{
+  0%{opacity:0;}
+  100%{opacity:1;}
+}
+
+/* 每个文字单独延时，黄圈2s启动 */
+.tl{
+  top:-140px;
+  left:-130px;
+  animation-delay:4.2s;
+}
+.tr{
+  top:-140px;
+  left:230px;
+  animation-delay:6.0s;
+}
+.bl{
+  top:240px;
+  left:-130px;
+  animation-delay:8.1s;
+}
+.br{
+  top:240px;
+  left:230px;
+  animation-delay:10.0s;
+}
 
 .btn-container{
   position:absolute;
@@ -197,36 +220,6 @@ body{
 </div>
 
 <script>
-const items = document.querySelectorAll(".dev-text-item");
-const startTime = performance.now() + 2000; // 和动画延迟2s对齐
-const totalDuration = 15000; // 总扩张15秒
-
-function tick(){
-  const now = performance.now();
-  const elapsed = Math.max(0, now - startTime);
-  const progress = Math.min(1, elapsed / totalDuration);
-  // ease‑out 曲线，和css ease‑out保持一致
-  const t = 1 - Math.pow(1‑progress,3);
-  const currentR = t * 600;
-
-  items.forEach(el=>{
-    // 获取元素相对于中心点（core-wrap）的距离
-    const rect = el.getBoundingClientRect();
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const dx = (rect.left + rect.width/2) - centerX;
-    const dy = (rect.top + rect.height/2) - centerY;
-    const dist = Math.hypot(dx, dy);
-
-    el.style.opacity = dist <= currentR ? "1" : "0";
-  });
-
-  if(progress < 1){
-    requestAnimationFrame(tick);
-  }
-}
-requestAnimationFrame(tick);
-
 document.getElementById("viewBtn").onclick = ()=>{
   alert("登陆区块｜查看详情逻辑");
 };
