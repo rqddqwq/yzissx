@@ -13,7 +13,6 @@ body{
   background:#ffffff;
 }
 
-/* 白色背景，保留轻微向上流动纹理 */
 .star-bg{
   position:absolute;
   inset:0;
@@ -32,7 +31,6 @@ body{
   100%{background-position:0 -220px;}
 }
 
-/* 中央核心容器：放大，下落完成后位置更居中 */
 .core-wrap{
   position:absolute;
   left:50%;
@@ -48,18 +46,17 @@ body{
   100%{transform:translateX(-50%) translateY(120px);opacity:1;}
 }
 
-/* 核心贴图占位，尺寸已放大 */
+/* 读取同目录 img.png 核心贴图 */
 .core{
   width:100%;
   height:100%;
-  background-image:url("img");
+  background-image:url("./img.png");
   background-size:contain;
   background-repeat:no-repeat;
   background-position:center;
   filter:drop-shadow(0 0 30px rgba(80,145,255,0.55));
 }
 
-/* 扩散波纹圆圈，跟随核心中心 */
 .wave-ring-wrap{
   position:absolute;
   left:50%;
@@ -89,7 +86,6 @@ body{
   100%{width:520px;height:520px;opacity:0;}
 }
 
-/* 开发者名字，白底下用深色更清楚 */
 .dev-name{
   position:absolute;
   left:50%;
@@ -109,7 +105,6 @@ body{
   100%{opacity:0.88;transform:translate(-50%,-50%) scale(1);}
 }
 
-/* 左中下查看详情按钮，白底加深色样式 */
 .btn-container{
   position:absolute;
   left:4vw;
@@ -137,7 +132,6 @@ body{
   transform:translateY(0);
 }
 
-/* 移动端适配 */
 @media(max-width:768px){
   .core-wrap{
     width:170px;
