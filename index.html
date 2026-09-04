@@ -142,26 +142,16 @@ body{
   }
 }
 
-/* ===== 扩散显示文字区域【修复版】===== */
+/* ===== 开发者文字：默认隐藏，光圈扫到才显示 ===== */
 .dev-text-wrap{
   position:absolute;
   left:50%;
   top:50%;
+  width:0;
+  height:0;
   transform:translate(-50%,-50%);
   z-index:4.5;
-  width:1400px;
-  height:1400px;
-  /* 关键：子元素全部以本容器（中心点=核心方块）为坐标原点 */
-  position:relative;
   pointer-events:none;
-  --r:0px;
-  mask-image: radial-gradient(circle, transparent 0%, transparent calc(var(--r) -14px), #fff calc(var(--r) -14px), #fff var(--r), transparent var(--r));
-  -webkit-mask-image: radial-gradient(circle, transparent 0%, transparent calc(var(--r) -14px), #fff calc(var(--r) -14px), #fff var(--r), transparent var(--r));
-  animation:maskAnim 15s ease-out forwards 2.0s;
-}
-@keyframes maskAnim {
-  0% { --r:0px; }
-  100% { --r:600px; }
 }
 
 .dev-text-item{
@@ -170,28 +160,27 @@ body{
   font-size:18px;
   line-height:1.6;
   white-space:pre-line;
+  opacity:0;
+  transition:opacity 0.8s ease-out;
 }
-/* 左上：核心左上方 */
-.tl{
-  top:-320px;
-  left:-420px;
+
+/* 全部围绕核心旁边，不再跑角落 */
+.dev-text-item.tl{
+  top:-130px;
+  left:-170px;
 }
-/* 右上：核心右上方 */
-.tr{
-  top:-280px;
-  left:280px;
+.dev-text-item.tr{
+  top:-110px;
+  left:140px;
 }
-/* 左下：核心左下方 */
-.bl{
-  top:260px;
-  left:-360px;
+.dev-text-item.bl{
+  top:100px;
+  left:-150px;
 }
-/* 右下：核心右下方 */
-.br{
-  top:300px;
-  left:320px;
+.dev-text-item.br{
+  top:120px;
+  left:130px;
 }
-/* ===== end ===== */
 
 .btn-container{
   position:absolute;
@@ -278,9 +267,29 @@ body{
 </div>
 
 <script>
-document.getElementById("viewBtn").onclick = ()=>{
-  alert("登陆区块｜查看详情逻辑");
-};
+document.addEventListener("DOMContentLoaded", function(){
+  const circle = document.querySelector(".yellow-circle");
+  const textWrap = document.querySelector(".dev-text-wrap");
+  const items = document.querySelectorAll(".dev-text-item");
+
+  // 四个文字分别在光圈扩散到不同距离时才显示
+  const thresholds = [220, 260, 300, 340];
+
+  circle.addEventListener("animationstart", function(){
+    textWrap.style.width = "1400px";
+    textWrap.style.height = "1400px";
+
+    items.forEach((item, index) => {
+      setTimeout(() => {
+        item.style.opacity = "1";
+      }, thresholds[index]);
+    });
+  });
+
+  document.getElementById("viewBtn").onclick = () => {
+    alert("登陆区块｜查看详情逻辑");
+  };
+});
 </script>
 </body>
 </html>
