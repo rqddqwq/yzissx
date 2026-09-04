@@ -100,6 +100,7 @@ body{
 .flame.f3{top:-24px;left:50%;margin-left:-19px;}
 .flame.f4{bottom:-24px;left:50%;margin-left:-19px;}
 
+/* 圆环：延迟2s启动，总时长12s；最大尺寸缩小到800px */
 .yellow-circle{
   position:absolute;
   left:50%;
@@ -111,11 +112,11 @@ body{
   border:7px solid rgba(255,200,80,0.9);
   border-radius:50%;
   opacity:0;
-  animation:circleSpread 15s ease-out forwards 2.0s;
+  animation:circleSpread 12s ease-out forwards 2.0s;
 }
 @keyframes circleSpread{
   0%{width:0;height:0;opacity:1;}
-  100%{width:1200px;height:1200px;opacity:0;}
+  100%{width:800px;height:800px;opacity:0;}
 }
 
 .dev-text-item{
@@ -127,33 +128,33 @@ body{
   z-index:4.5;
   pointer-events:none;
   opacity:0;
-  animation:textFade 1.2s ease-out forwards;
+  animation:textFade 1.0s ease-out forwards;
 }
 @keyframes textFade{
   0%{opacity:0;}
   100%{opacity:1;}
 }
 
-/* 每个文字单独延时，黄圈2s启动 */
+/* 匹配总12s动画的出现时机，圈2s开始扩张 */
 .tl{
   top:-140px;
   left:-130px;
-  animation-delay:4.2s;
+  animation-delay:3.8s;
 }
 .tr{
   top:-140px;
   left:230px;
-  animation-delay:6.0s;
+  animation-delay:5.4s;
 }
 .bl{
   top:240px;
   left:-130px;
-  animation-delay:8.1s;
+  animation-delay:7.0s;
 }
 .br{
   top:240px;
   left:230px;
-  animation-delay:10.0s;
+  animation-delay:8.5s;
 }
 
 .btn-container{
