@@ -118,40 +118,20 @@ body{
   100%{width:1200px;height:1200px;opacity:0;}
 }
 
-/* ==========文字直接放在core-wrap内部，坐标相对于方块========== */
 .dev-text-item{
   position:absolute;
   color:#664422;
   font-size:16px;
   line-height:1.5;
   white-space:pre-line;
-  opacity:0;
-  animation:textFade 1.0s ease-out forwards;
+  z-index:4.5;
   pointer-events:none;
+  opacity:0;
 }
-@keyframes textFade{0%{opacity:0;}100%{opacity:1;}}
-
-/* 全部相对于方块(220×220)，紧贴四周 */
-.tl{
-  top:-140px;
-  left:-130px;
-  animation-delay:2.4s;
-}
-.tr{
-  top:-140px;
-  left:230px;
-  animation-delay:2.8s;
-}
-.bl{
-  top:240px;
-  left:-130px;
-  animation-delay:3.2s;
-}
-.br{
-  top:240px;
-  left:230px;
-  animation-delay:3.6s;
-}
+.tl{top:-140px;left:-130px;}
+.tr{top:-140px;left:230px;}
+.bl{top:240px;left:-130px;}
+.br{top:240px;left:230px;}
 
 .btn-container{
   position:absolute;
@@ -198,7 +178,6 @@ body{
   <div class="flame f3"></div>
   <div class="flame f4"></div>
 
-  <!-- 文字直接放进core-wrap里面，跟随方块 -->
   <div class="dev-text-item tl">【代码编写】
 玄钢重工Mod
 版本开发</div>
@@ -218,6 +197,36 @@ body{
 </div>
 
 <script>
+const items = document.querySelectorAll(".dev-text-item");
+const startTime = performance.now() + 2000; // 和动画延迟2s对齐
+const totalDuration = 15000; // 总扩张15秒
+
+function tick(){
+  const now = performance.now();
+  const elapsed = Math.max(0, now - startTime);
+  const progress = Math.min(1, elapsed / totalDuration);
+  // ease‑out 曲线，和css ease‑out保持一致
+  const t = 1 - Math.pow(1‑progress,3);
+  const currentR = t * 600;
+
+  items.forEach(el=>{
+    // 获取元素相对于中心点（core-wrap）的距离
+    const rect = el.getBoundingClientRect();
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const dx = (rect.left + rect.width/2) - centerX;
+    const dy = (rect.top + rect.height/2) - centerY;
+    const dist = Math.hypot(dx, dy);
+
+    el.style.opacity = dist <= currentR ? "1" : "0";
+  });
+
+  if(progress < 1){
+    requestAnimationFrame(tick);
+  }
+}
+requestAnimationFrame(tick);
+
 document.getElementById("viewBtn").onclick = ()=>{
   alert("登陆区块｜查看详情逻辑");
 };
