@@ -115,44 +115,30 @@ body{
 .flame.f3{top:-24px;left:50%;margin-left:-19px;}
 .flame.f4{bottom:-24px;left:50%;margin-left:-19px;}
 
-.spread-circle-wrap{
+/* 黄色扩散圈：在核心下面，中心对齐，慢慢放大，5秒后消失 */
+.yellow-circle{
   position:absolute;
   left:50%;
   top:50%;
+  width:0px;
+  height:0px;
   transform:translate(-50%,-50%);
-  z-index:6;
-  pointer-events:none;
-  opacity:0;
-  animation:showSpread 0s ease forwards 4.2s;
-}
-@keyframes showSpread{
-  to{opacity:1;}
-}
-
-.spread-circle{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:100px;
-  height:100px;
-  transform:translate(-50%,-50%);
+  z-index:4;
+  border:4px solid rgba(255,200,80,0.9);
   border-radius:50%;
-  background:
-    radial-gradient(circle at center, transparent 60%, rgba(255,200,80,0.85) 61%, rgba(255,200,80,0.85) 65%, transparent 66%),
-    radial-gradient(circle at center, transparent 72%, rgba(255,220,100,0.9) 73%, rgba(255,220,100,0.9) 77%, transparent 78%);
-  filter:blur(1px);
-  animation:spreadOut 3.2s ease-out forwards;
+  opacity:0;
+  animation:circleSpread 5s ease-out forwards 4.2s;
 }
 
-@keyframes spreadOut{
+@keyframes circleSpread{
   0%{
-    height:100px;
-    width:100px;
-    opacity:0.8;
+    width:0px;
+    height:0px;
+    opacity:1;
   }
   100%{
-    height:520px;
     width:520px;
+    height:520px;
     opacity:0;
   }
 }
@@ -208,6 +194,9 @@ body{
 <body>
 <div class="star-bg"></div>
 
+<!-- 黄色扩散圈在核心前面，所以 z-index 更低，会被核心盖住 -->
+<div class="yellow-circle"></div>
+
 <div class="core-wrap">
   <div class="dev-name">DEVELOPER NAME</div>
   <div class="core"></div>
@@ -215,10 +204,6 @@ body{
   <div class="flame f2"></div>
   <div class="flame f3"></div>
   <div class="flame f4"></div>
-</div>
-
-<div class="spread-circle-wrap">
-  <div class="spread-circle"></div>
 </div>
 
 <div class="btn-container">
