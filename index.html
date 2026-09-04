@@ -31,7 +31,6 @@ body{
   100%{background-position:0 -220px;}
 }
 
-/* 始终固定屏幕正中心，只用scale做远近降落，不上下偏移 */
 .core-wrap{
   position:absolute;
   left:50%;
@@ -42,12 +41,10 @@ body{
   z-index:5;
   animation:coreZoomFall 4.2s ease-out forwards;
 }
-/* 大→缩小，模拟从远处降落，位置永远居中 */
 @keyframes coreZoomFall{
   0%{transform:translate(-50%,-50%) scale(2.2);opacity:0.25;}
   100%{transform:translate(-50%,-50%) scale(1);opacity:1;}
 }
-
 .core{
   width:100%;
   height:100%;
@@ -58,7 +55,26 @@ body{
   filter:drop-shadow(0 0 30px rgba(80,145,255,0.55));
 }
 
-/* 波纹严格屏幕中心点 */
+/* 降落全程点火，4.2s落地瞬间熄灭 */
+.flame{
+  position:absolute;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:radial-gradient(circle,#ffdd77,#ff8833,transparent);
+  opacity:0.85;
+  animation:flamePulse 0.45s ease-in-out infinite alternate, flameCut 0s ease forwards 4.2s;
+}
+@keyframes flameCut{to{opacity:0;}}
+@keyframes flamePulse{
+  0%{transform:scale(0.85);filter:blur(4px);}
+  100%{transform:scale(1.15);filter:blur(7px);}
+}
+.flame.f1{left:-22px;top:50%;transform:translateY(-50%);}
+.flame.f2{right:-22px;top:50%;transform:translateY(-50%);}
+.flame.f3{top:-22px;left:50%;transform:translateX(-50%);}
+.flame.f4{bottom:-22px;left:50%;transform:translateX(-50%);}
+
 .wave-ring-wrap{
   position:absolute;
   left:50%;
@@ -80,9 +96,7 @@ body{
   border-radius:50%;
   animation:ringExpand 3.2s ease-out forwards;
 }
-@keyframes waveShow{
-  to{opacity:1;}
-}
+@keyframes waveShow{to{opacity:1;}}
 @keyframes ringExpand{
   0%{width:20px;height:20px;opacity:0.9;}
   100%{width:520px;height:520px;opacity:0;}
@@ -130,27 +144,13 @@ body{
   border-color:rgba(80,145,255,0.75);
   transform:translateY(-2px);
 }
-.detail-btn:active{
-  transform:translateY(0);
-}
+.detail-btn:active{transform:translateY(0);}
 
 @media(max-width:768px){
-  .core-wrap{
-    width:170px;
-    height:170px;
-  }
-  .dev-name{
-    font-size:24px;
-    letter-spacing:3px;
-  }
-  .btn-container{
-    left:50%;
-    transform:translateX(-50%);
-  }
-  .detail-btn{
-    width:280px;
-    text-align:center;
-  }
+  .core-wrap{width:170px;height:170px;}
+  .dev-name{font-size:24px;letter-spacing:3px;}
+  .btn-container{left:50%;transform:translateX(-50%);}
+  .detail-btn{width:280px;text-align:center;}
 }
 </style>
 </head>
@@ -159,6 +159,10 @@ body{
 
 <div class="core-wrap">
   <div class="core"></div>
+  <div class="flame f1"></div>
+  <div class="flame f2"></div>
+  <div class="flame f3"></div>
+  <div class="flame f4"></div>
 </div>
 
 <div class="wave-ring-wrap">
