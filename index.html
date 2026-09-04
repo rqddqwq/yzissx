@@ -134,7 +134,6 @@ body{
   100%{opacity:1;}
 }
 
-/* 全部延后，圈快扫到才出现 */
 .tl{
   top:-140px;
   left:-130px;
@@ -150,6 +149,7 @@ body{
   left:-130px;
   animation-delay:8.4s;
 }
+
 .btn-container{
   position:absolute;
   left:4vw;
@@ -178,8 +178,15 @@ body{
 @media(max-width:768px){
   .core-wrap{width:170px;height:170px;}
   .dev-name{font-size:24px;letter-spacing:3px;bottom:calc(100% + 12px);}
-  .btn-container{left:50%;transform:translateX(-50%);}
-  .detail-btn{width:280px;text-align:center;}
+  /* 手机端按钮：回到左侧，不居中 */
+  .btn-container{
+    left:4vw;
+    transform:none;
+  }
+  .detail-btn{
+    width:auto;
+    text-align:left;
+  }
 }
 </style>
 </head>
@@ -204,8 +211,8 @@ body{
 一个屑爬重</div>
   <div class="dev-text-item bl">【逻辑实现】
 。(大梦一场) </div>
-<div>
-<div>
+</div>
+
 <div class="btn-container">
   <button class="detail-btn" id="viewBtn">查看详情</button>
 </div>
