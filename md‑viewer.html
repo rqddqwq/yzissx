@@ -3,15 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>多MD文件预览器</title>
+<title>Mod Wiki</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,Roboto,sans-serif;background:#121417;color:#e6e8ec;height:100vh;display:flex;overflow:hidden}
-#sidebar{width:260px;background:#1a1d22;border-right:1px solid #2c2f36;display:flex;flex-direction:column}
-#fileInput{padding:12px;margin:10px;border:none;color:#fff}
-#fileList{flex:1;overflow:auto;padding:8px}
-.file-item{padding:8px 10px;margin:2px 0;border-radius:4px;cursor:pointer}
-.file-item.active{background:#2b3038;color:#ffbc66}
+#sidebar{width:260px;background:#1a1d22;border-right:1px solid #2c2f36;overflow:auto;padding:12px}
+#sidebar a{display:block;padding:7px 9px;margin:3px 0;border-radius:4px;color:#b8c2d0;text-decoration:none}
+#sidebar a:hover{background:#272c33;color:#ffbc66}
 #main{flex:1;overflow:auto;padding:24px}
 #preview{max-width:880px;margin:0 auto}
 #preview h1{font-size:28px;margin:12px 0 16px;color:#fff;border-bottom:1px solid #2d3036;padding-bottom:8px}
@@ -22,62 +20,72 @@ body{font-family:system-ui,Roboto,sans-serif;background:#121417;color:#e6e8ec;he
 #preview a{color:#63b8ff;text-decoration:none}
 #preview a:hover{text-decoration:underline}
 #preview img{max-width:100%;border-radius:6px;margin:10px 0;background:#252830;padding:4px}
+.load{opacity:0.4}
 </style>
 </head>
 <body>
 <div id="sidebar">
-<input type="file" id="fileInput" multiple accept=".md">
-<div id="fileList"></div>
+<div style="margin-bottom:10px;opacity:0.7">文档列表</div>
+<div id="fileList">加载目录…</div>
 </div>
 <div id="main">
-<div id="preview">请选择一个或多个md文件</div>
+<div id="preview">选择左侧文档</div>
 </div>
 
 <script>
-const fileInput = document.getElementById('fileInput');
-const fileListEl = document.getElementById('fileList');
 const previewEl = document.getElementById('preview');
+const fileListEl = document.getElementById('fileList');
+let docList = [];
 
-let fileMap = new Map();
-
-//简易md渲染，适配你的模组wiki格式
 function renderMarkdown(text){
-    let html = text
+    return text
     .replace(/^# (.*?)$/gm,'<h1>$1</h1>')
     .replace(/^## (.*?)$/gm,'<h2>$1</h2>')
     .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
     .replace(/!\[(.*?)\]\((.*?)\)/g,'<img alt="$1" src="$2">')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2">$1</a>')
+    .replace(/\[([^\]]+)\]\(\/content\/([^)]+)\)/g,`<a href="javascript:openDoc('$2')">$1</a>`)
     .replace(/^- (.*?)$/gm,'<li>$1</li>')
     .replace(/((?:<li>.*?<\/li>\n?)+)/g,'<ul>$1</ul>')
     .replace(/\n/g,'<br>');
-    return html;
 }
 
-function renderFile(name,content){
-    previewEl.innerHTML = `<h4 style="opacity:0.6">${name}</h4>` + renderMarkdown(content);
+async function openDoc(name){
+    previewEl.className = "load";
+    try{
+        const res = await fetch(`/content/${name}.md`);
+        if(!res.ok) throw new Error("404");
+        const mdText = await res.text();
+        previewEl.innerHTML = renderMarkdown(mdText);
+    }catch(e){
+        previewEl.innerHTML = `<h1>404</h1><p>文档 ${name} 不存在</p>`;
+    }
+    previewEl.className = "";
 }
 
-fileInput.onchange = async function(e){
-    const files = Array.from(e.target.files);
-    fileListEl.innerHTML = '';
-    fileMap.clear();
-
-    for(let f of files){
-        const txt = await f.text();
-        fileMap.set(f.name,txt);
-
-        const div = document.createElement('div');
-        div.className = 'file-item';
-        div.textContent = f.name;
-        div.onclick = ()=>{
-            document.querySelectorAll('.file-item').forEach(i=>i.classList.remove('active'));
-            div.classList.add('active');
-            renderFile(f.name,fileMap.get(f.name));
-        }
-        fileListEl.appendChild(div);
+async function loadIndex(){
+    try{
+        const resp = await fetch("/content/index.json");
+        docList = await resp.json();
+        fileListEl.innerHTML = "";
+        docList.forEach(name=>{
+            const a = document.createElement('a');
+            a.textContent = name;
+            a.href = `javascript:openDoc('${name}')`;
+            fileListEl.appendChild(a);
+        });
+        readUrlParam();
+    }catch(err){
+        fileListEl.innerText = "读取目录失败";
     }
 }
+
+function readUrlParam(){
+    const params = new URLSearchParams(location.search);
+    const doc = params.get("doc");
+    if(doc) openDoc(doc);
+}
+
+loadIndex();
 </script>
 </body>
 </html>
