@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>登陆区块</title>
 <style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+}
+
 .bg-image{
   position:absolute;
   inset:0;
@@ -14,7 +21,6 @@
   background-position:center;
   background-repeat:no-repeat;
 }
-
 
 .star-bg{
   position:absolute;
@@ -220,6 +226,7 @@
 </style>
 </head>
 <body>
+<div class="bg-image"></div>
 <div class="star-bg"></div>
 <div class="yellow-circle"></div>
 <div class="smoke-wrap"></div>
@@ -250,7 +257,7 @@
 <script>
 const wrap = document.querySelector('.smoke-wrap');
 const count = 24;
-const radius = 260; //烟雾展开半径，调更大就更散开
+const radius = 260;
 
 for(let i = 0; i < count; i++){
   const angle = (i / count) * Math.PI * 2;
@@ -263,8 +270,7 @@ for(let i = 0; i < count; i++){
   ball.style.top = `${y}px`;
   ball.style.marginLeft = '-42px';
   ball.style.marginTop = '-42px';
-  //全部同时启动，无逐个错开延迟
-  ball.style.animationDelay = '2s';
+  ball.style.animationDelay = '0s';
 
   wrap.appendChild(ball);
 }
