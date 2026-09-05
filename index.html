@@ -100,7 +100,6 @@ body{
 .flame.f3{top:-24px;left:50%;margin-left:-19px;}
 .flame.f4{bottom:-24px;left:50%;margin-left:-19px;}
 
-/* 黄色圆圈：颜色加厚、更明显 */
 .yellow-circle{
   position:absolute;
   left:50%;
@@ -151,57 +150,69 @@ body{
   animation-delay:8.4s;
 }
 
-/* 烟雾：以核心中心点为起点，在核心周围扩散，不在下方 */
+/* 烟雾：核心下方图层生成，一个个白色大球 */
 .smoke-wrap{
   position:absolute;
   left:50%;
   top:50%;
-  width:220px;
-  height:220px;
   transform:translate(-50%,-50%);
+  width:260px;
+  height:260px;
   pointer-events:none;
-  z-index:6;
+  z-index:4;
 }
 .smoke-ball{
   position:absolute;
   left:50%;
   top:50%;
   border-radius:50%;
-  background:radial-gradient(ellipse, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.45) 45%, transparent 75%);
-  filter:blur(22px);
+  background:radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.4) 50%, transparent 72%);
+  filter:blur(18px);
   opacity:0;
-  animation:smokeFromCenter 2s ease-out forwards 2.2s;
+  animation:smokeBallsFromBelow 2s ease-out forwards 2.2s;
 }
 .smoke-ball:nth-child(1){
-  width:160px;
-  height:160px;
-  transform:translate(-50%,-50%);
+  width:90px;
+  height:90px;
+  transform:translate(-50%, 60px);
 }
 .smoke-ball:nth-child(2){
-  width:130px;
-  height:130px;
-  transform:translate(-50%,-50%);
-  animation-delay:2.25s;
+  width:110px;
+  height:110px;
+  transform:translate(-80px, 80px);
+  animation-delay:2.05s;
 }
 .smoke-ball:nth-child(3){
   width:100px;
   height:100px;
-  transform:translate(-50%,-50%);
-  animation-delay:2.3s;
+  transform:translate(-20px, 90px);
+  animation-delay:2.1s;
+}
+.smoke-ball:nth-child(4){
+  width:120px;
+  height:120px;
+  transform:translate(20px, 85px);
+  animation-delay:2.15s;
+}
+.smoke-ball:nth-child(5){
+  width:95px;
+  height:95px;
+  transform:translate(70px, 70px);
+  animation-delay:2.2s;
 }
 
-@keyframes smokeFromCenter{
+@keyframes smokeBallsFromBelow{
   0%{
     opacity:0;
-    transform:translate(-50%,-50%) scale(0.1);
+    transform:translate(var(--tx, -50px), 120px) scale(0.3);
   }
   25%{
     opacity:0.85;
-    transform:translate(-50%,-50%) scale(1);
+    transform:translate(var(--tx, -50px), 70px) scale(1);
   }
   100%{
     opacity:0;
-    transform:translate(-50%,-50%) scale(1.6);
+    transform:translate(var(--tx, -50px), 10px) scale(1.4);
   }
 }
 
@@ -233,7 +244,12 @@ body{
 @media(max-width:768px){
   .core-wrap{width:170px;height:170px;}
   .dev-name{font-size:24px;letter-spacing:3px;bottom:calc(100% + 12px);}
-  .smoke-wrap{width:170px;height:170px;}
+  .smoke-wrap{width:200px;height:200px;}
+  .smoke-ball:nth-child(1){width:70px;height:70px;}
+  .smoke-ball:nth-child(2){width:85px;height:85px;}
+  .smoke-ball:nth-child(3){width:80px;height:80px;}
+  .smoke-ball:nth-child(4){width:90px;height:90px;}
+  .smoke-ball:nth-child(5){width:75px;height:75px;}
   .btn-container{
     left:4vw;
     transform:none;
@@ -249,8 +265,10 @@ body{
 <div class="star-bg"></div>
 <div class="yellow-circle"></div>
 
-<!-- 烟雾以核心中心为起点，在核心周围扩散 -->
+<!-- 烟雾放在核心下方图层 -->
 <div class="smoke-wrap">
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
   <div class="smoke-ball"></div>
   <div class="smoke-ball"></div>
   <div class="smoke-ball"></div>
