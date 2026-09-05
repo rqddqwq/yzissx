@@ -167,7 +167,7 @@ body{
   background:radial-gradient(circle, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.48) 50%, transparent 72%);
   filter:blur(24px);
   opacity:0;
-  animation:smokeAnim 4s ease-out forwards;
+  animation:smokeAnim 4s ease-out forwards 2.2s;
 }
 
 @keyframes smokeAnim{
@@ -204,7 +204,7 @@ body{
 @media(max-width:768px){
   .core-wrap{width:170px;height:170px;}
   .dev-name{font-size:24px;letter-spacing:3px;bottom:calc(100% + 12px);}
-  .smoke-ball{width:62px;height:62px;}
+  .smoke-ball{width:70px;height:70px;}
   .btn-container{
     left:4vw;
     transform:none;
@@ -247,18 +247,22 @@ body{
 <script>
 const wrap = document.querySelector('.smoke-wrap');
 const count = 24;
-const radius = 240; //烟雾圆环半径，调大就散开，调小就贴紧
-for(let i=0;i<count;i++){
+const radius = 260; //烟雾展开半径，调更大就更散开
+
+for(let i = 0; i < count; i++){
   const angle = (i / count) * Math.PI * 2;
   const x = Math.cos(angle) * radius;
   const y = Math.sin(angle) * radius;
+
   const ball = document.createElement('div');
   ball.className = 'smoke-ball';
   ball.style.left = `${x}px`;
   ball.style.top = `${y}px`;
   ball.style.marginLeft = '-42px';
   ball.style.marginTop = '-42px';
-  ball.style.animationDelay = (2.2 + i*0.04)+'s';
+  //全部同时启动，无逐个错开延迟
+  ball.style.animationDelay = '0s';
+
   wrap.appendChild(ball);
 }
 
