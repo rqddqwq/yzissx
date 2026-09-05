@@ -150,14 +150,14 @@ body{
   animation-delay:8.4s;
 }
 
-/* 烟雾：核心下方图层，中心旁边生成，正中心留空 */
+/* 烟雾：24个小球，存活4秒，核心下方图层，中心留空，环绕旁边生成 */
 .smoke-wrap{
   position:absolute;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
-  width:420px;
-  height:320px;
+  width:460px;
+  height:360px;
   pointer-events:none;
   z-index:4;
 }
@@ -167,21 +167,33 @@ body{
   background:radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.45) 50%, transparent 72%);
   filter:blur(22px);
   opacity:0;
-  animation:smokeRingFromBelow 2s ease-out forwards 2.2s;
+  animation:smokeRingFromBelow 4s ease-out forwards 2.2s;
 }
 
-.smoke-ball:nth-child(1){width:110px;height:110px;left:35%;top:65%;}
-.smoke-ball:nth-child(2){width:130px;height:130px;left:55%;top:60%;animation-delay:2.05s;}
-.smoke-ball:nth-child(3){width:120px;height:120px;left:20%;top:55%;animation-delay:2.1s;}
-.smoke-ball:nth-child(4){width:140px;height:140px;left:70%;top:50%;animation-delay:2.15s;}
-.smoke-ball:nth-child(5){width:115px;height:115px;left:10%;top:70%;animation-delay:2.2s;}
-.smoke-ball:nth-child(6){width:100px;height:100px;left:80%;top:65%;animation-delay:2.25s;}
-.smoke-ball:nth-child(7){width:105px;height:105px;left:25%;top:80%;animation-delay:2.3s;}
-.smoke-ball:nth-child(8){width:95px;height:95px;left:60%;top:75%;animation-delay:2.35s;}
-.smoke-ball:nth-child(9){width:125px;height:125px;left:40%;top:85%;animation-delay:2.4s;}
-.smoke-ball:nth-child(10){width:108px;height:108px;left:15%;top:45%;animation-delay:2.45s;}
-.smoke-ball:nth-child(11){width:112px;height:112px;left:75%;top:40%;animation-delay:2.5s;}
-.smoke-ball:nth-child(12){width:90px;height:90px;left:50%;top:90%;animation-delay:2.55s;}
+.smoke-ball:nth-child(1){width:110px;height:110px;left:32%;top:62%;}
+.smoke-ball:nth-child(2){width:124px;height:124px;left:58%;top:58%;animation-delay:2.05s;}
+.smoke-ball:nth-child(3){width:116px;height:116px;left:18%;top:52%;animation-delay:2.10s;}
+.smoke-ball:nth-child(4){width:132px;height:132px;left:72%;top:48%;animation-delay:2.15s;}
+.smoke-ball:nth-child(5){width:106px;height:106px;left:8%;top:68%;animation-delay:2.20s;}
+.smoke-ball:nth-child(6){width:98px;height:98px;left:82%;top:62%;animation-delay:2.25s;}
+.smoke-ball:nth-child(7){width:102px;height:102px;left:22%;top:78%;animation-delay:2.30s;}
+.smoke-ball:nth-child(8){width:92px;height:92px;left:64%;top:72%;animation-delay:2.35s;}
+.smoke-ball:nth-child(9){width:120px;height:120px;left:38%;top:84%;animation-delay:2.40s;}
+.smoke-ball:nth-child(10){width:104px;height:104px;left:14%;top:42%;animation-delay:2.45s;}
+.smoke-ball:nth-child(11){width:108px;height:108px;left:76%;top:38%;animation-delay:2.50s;}
+.smoke-ball:nth-child(12){width:88px;height:88px;left:48%;top:88%;animation-delay:2.55s;}
+.smoke-ball:nth-child(13){width:96px;height:96px;left:28%;top:44%;animation-delay:2.60s;}
+.smoke-ball:nth-child(14){width:114px;height:114px;left:68%;top:76%;animation-delay:2.65s;}
+.smoke-ball:nth-child(15){width:100px;height:100px;left:12%;top:80%;animation-delay:2.70s;}
+.smoke-ball:nth-child(16){width:126px;height:126px;left:84%;top:50%;animation-delay:2.75s;}
+.smoke-ball:nth-child(17){width:94px;height:94px;left:42%;top:50%;animation-delay:2.80s;}
+.smoke-ball:nth-child(18){width:118px;height:118px;left:54%;top:82%;animation-delay:2.85s;}
+.smoke-ball:nth-child(19){width:103px;height:103px;left:34%;top:74%;animation-delay:2.90s;}
+.smoke-ball:nth-child(20){width:90px;height:90px;left:62%;top:42%;animation-delay:2.95s;}
+.smoke-ball:nth-child(21){width:112px;height:112px;left:20%;top:64%;animation-delay:3.00s;}
+.smoke-ball:nth-child(22){width:107px;height:107px;left:78%;top:70%;animation-delay:3.05s;}
+.smoke-ball:nth-child(23){width:97px;height:97px;left:44%;top:68%;animation-delay:3.10s;}
+.smoke-ball:nth-child(24){width:111px;height:111px;left:52%;top:46%;animation-delay:3.15s;}
 
 @keyframes smokeRingFromBelow{
   0%{
@@ -226,20 +238,32 @@ body{
 @media(max-width:768px){
   .core-wrap{width:170px;height:170px;}
   .dev-name{font-size:24px;letter-spacing:3px;bottom:calc(100% + 12px);}
-  .smoke-wrap{width:300px;height:240px;}
+  .smoke-wrap{width:340px;height:280px;}
 
   .smoke-ball:nth-child(1){width:80px;height:80px;}
-  .smoke-ball:nth-child(2){width:95px;height:95px;}
-  .smoke-ball:nth-child(3){width:88px;height:88px;}
-  .smoke-ball:nth-child(4){width:100px;height:100px;}
-  .smoke-ball:nth-child(5){width:85px;height:85px;}
-  .smoke-ball:nth-child(6){width:75px;height:75px;}
-  .smoke-ball:nth-child(7){width:78px;height:78px;}
-  .smoke-ball:nth-child(8){width:70px;height:70px;}
-  .smoke-ball:nth-child(9){width:90px;height:90px;}
-  .smoke-ball:nth-child(10){width:82px;height:82px;}
-  .smoke-ball:nth-child(11){width:84px;height:84px;}
-  .smoke-ball:nth-child(12){width:68px;height:68px;}
+  .smoke-ball:nth-child(2){width:90px;height:90px;}
+  .smoke-ball:nth-child(3){width:84px;height:84px;}
+  .smoke-ball:nth-child(4){width:96px;height:96px;}
+  .smoke-ball:nth-child(5){width:78px;height:78px;}
+  .smoke-ball:nth-child(6){width:72px;height:72px;}
+  .smoke-ball:nth-child(7){width:74px;height:74px;}
+  .smoke-ball:nth-child(8){width:68px;height:68px;}
+  .smoke-ball:nth-child(9){width:88px;height:88px;}
+  .smoke-ball:nth-child(10){width:76px;height:76px;}
+  .smoke-ball:nth-child(11){width:79px;height:79px;}
+  .smoke-ball:nth-child(12){width:64px;height:64px;}
+  .smoke-ball:nth-child(13){width:70px;height:70px;}
+  .smoke-ball:nth-child(14){width:82px;height:82px;}
+  .smoke-ball:nth-child(15){width:73px;height:73px;}
+  .smoke-ball:nth-child(16){width:92px;height:92px;}
+  .smoke-ball:nth-child(17){width:75px;height:75px;}
+  .smoke-ball:nth-child(18){width:86px;height:86px;}
+  .smoke-ball:nth-child(19){width:77px;height:77px;}
+  .smoke-ball:nth-child(20){width:66px;height:66px;}
+  .smoke-ball:nth-child(21){width:81px;height:81px;}
+  .smoke-ball:nth-child(22){width:78px;height:78px;}
+  .smoke-ball:nth-child(23){width:71px;height:71px;}
+  .smoke-ball:nth-child(24){width:83px;height:83px;}
 
   .btn-container{
     left:4vw;
@@ -256,8 +280,19 @@ body{
 <div class="star-bg"></div>
 <div class="yellow-circle"></div>
 
-<!-- 烟雾在核心下方图层，正中心留空，从中心旁边生成 -->
 <div class="smoke-wrap">
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
   <div class="smoke-ball"></div>
   <div class="smoke-ball"></div>
   <div class="smoke-ball"></div>
@@ -292,7 +327,7 @@ body{
 </div>
 
 <div class="btn-container">
-  <div class="detail-btn" id="viewBtn">查看详情</div>
+  <button class="detail-btn" id="viewBtn">查看详情</button>
 </div>
 
 <script>
