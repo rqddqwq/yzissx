@@ -150,35 +150,35 @@ body{
   animation-delay:8.4s;
 }
 
-/* ==========新增落地烟雾圆球========== */
+/* 落地烟雾【修复版】放在页面中心下方，不受core-wrap transform干扰 */
 .smoke-wrap{
   position:absolute;
   left:50%;
-  top:100%;
-  transform:translateX(-50%);
-  width:260px;
-  height:120px;
+  top:50%;
+  transform:translate(-50%, 220px);
+  width:280px;
+  height:130px;
   pointer-events:none;
   z-index:4;
 }
 .smoke-ball{
   position:absolute;
   border-radius:50%;
-  background:radial-gradient(circle, #888888 0%, transparent 70%);
-  filter:blur(12px);
+  background:radial-gradient(circle,#777777 0%,transparent 72%);
+  filter:blur(14px);
   opacity:0;
-  animation:smokeRise 1.8s ease‑out forwards 2.2s;
+  animation:smokeRise 1.8s ease-out forwards 2.2s;
 }
-.smoke-ball:nth-child(1){width:70px;height:70px;left:0%;bottom:0;}
-.smoke-ball:nth-child(2){width:90px;height:90px;left:22%;bottom:-10px;}
-.smoke-ball:nth-child(3){width:62px;height:62px;left:48%;bottom:4px;}
-.smoke-ball:nth-child(4){width:82px;height:82px;left:68%;bottom:-6px;}
-.smoke-ball:nth-child(5){width:66px;height:66px;left:86%;bottom:2px;}
+.smoke-ball:nth-child(1){width:72px;height:72px;left:0%;bottom:0;}
+.smoke-ball:nth-child(2){width:94px;height:94px;left:20%;bottom:-8px;}
+.smoke-ball:nth-child(3){width:64px;height:64px;left:46%;bottom:2px;}
+.smoke-ball:nth-child(4){width:86px;height:86px;left:66%;bottom:-4px;}
+.smoke-ball:nth-child(5){width:68px;height:68px;left:84%;bottom:4px;}
 
 @keyframes smokeRise{
   0%{opacity:0;transform:translateY(0) scale(0.4);}
-  20%{opacity:0.65;}
-  100%{opacity:0;transform:translateY(-80px) scale(1.3);}
+  15%{opacity:0.7;}
+  100%{opacity:0;transform:translateY(-90px) scale(1.4);}
 }
 
 .btn-container{
@@ -209,6 +209,7 @@ body{
 @media(max-width:768px){
   .core-wrap{width:170px;height:170px;}
   .dev-name{font-size:24px;letter-spacing:3px;bottom:calc(100% + 12px);}
+  .smoke-wrap{transform:translate(-50%,180px);width:220px;}
   .btn-container{
     left:4vw;
     transform:none;
@@ -224,6 +225,15 @@ body{
 <div class="star-bg"></div>
 <div class="yellow-circle"></div>
 
+<!-- 烟雾移到core-wrap外面，不再受父transform干扰 -->
+<div class="smoke-wrap">
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+  <div class="smoke-ball"></div>
+</div>
+
 <div class="core-wrap">
   <div class="dev-name">DARKSTEEL</div>
   <div class="core"></div>
@@ -231,15 +241,6 @@ body{
   <div class="flame f2"></div>
   <div class="flame f3"></div>
   <div class="flame f4"></div>
-
-  <!-- 落地烟雾圆球 -->
-  <div class="smoke-wrap">
-    <div class="smoke-ball"></div>
-    <div class="smoke-ball"></div>
-    <div class="smoke-ball"></div>
-    <div class="smoke-ball"></div>
-    <div class="smoke-ball"></div>
-  </div>
 
   <div class="dev-text-item tl">【作者】
 容器</div>
