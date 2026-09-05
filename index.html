@@ -150,12 +150,12 @@ body{
   animation-delay:8.4s;
 }
 
-/* 落地烟雾【修复版】放在页面中心下方，不受core-wrap transform干扰 */
+/* 落地烟雾白色版 */
 .smoke-wrap{
   position:absolute;
   left:50%;
   top:50%;
-  transform:translate(-50%, 220px);
+  transform:translate(-50%,220px);
   width:280px;
   height:130px;
   pointer-events:none;
@@ -164,7 +164,7 @@ body{
 .smoke-ball{
   position:absolute;
   border-radius:50%;
-  background:radial-gradient(circle,#777777 0%,transparent 72%);
+  background:radial-gradient(circle,#ffffff 0%,transparent 72%);
   filter:blur(14px);
   opacity:0;
   animation:smokeRise 1.8s ease-out forwards 2.2s;
@@ -180,6 +180,7 @@ body{
   15%{opacity:0.7;}
   100%{opacity:0;transform:translateY(-90px) scale(1.4);}
 }
+
 
 .btn-container{
   position:absolute;
