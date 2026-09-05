@@ -100,6 +100,7 @@ body{
 .flame.f3{top:-24px;left:50%;margin-left:-19px;}
 .flame.f4{bottom:-24px;left:50%;margin-left:-19px;}
 
+/* 黄色圆圈：颜色加厚、更明显 */
 .yellow-circle{
   position:absolute;
   left:50%;
@@ -108,7 +109,7 @@ body{
   height:0px;
   transform:translate(-50%,-50%);
   z-index:4;
-  border:7px solid rgba(255,200,80,0.9);
+  border:12px solid rgba(255,180,0,0.95);
   border-radius:50%;
   opacity:0;
   animation:circleSpread 12s ease-out forwards 2.0s;
@@ -150,33 +151,58 @@ body{
   animation-delay:8.4s;
 }
 
-/* 贴地炸开大片落地白烟，总时长2s */
+/* 烟雾：以核心中心点为起点，在核心周围扩散，不在下方 */
 .smoke-wrap{
   position:absolute;
   left:50%;
   top:50%;
-  transform:translate(-50%,240px);
-  width:520px;
-  height:90px;
+  width:220px;
+  height:220px;
+  transform:translate(-50%,-50%);
   pointer-events:none;
-  z-index:4;
+  z-index:6;
 }
 .smoke-ball{
   position:absolute;
+  left:50%;
+  top:50%;
   border-radius:50%;
-  background:radial-gradient(ellipse, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 60%, transparent 82%);
-  filter:blur(26px);
+  background:radial-gradient(ellipse, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.45) 45%, transparent 75%);
+  filter:blur(22px);
   opacity:0;
-  animation:smokeGroundBlast 2s ease-out forwards 2.2s;
+  animation:smokeFromCenter 2s ease-out forwards 2.2s;
 }
-.smoke-ball:nth-child(1){width:240px;height:70px;left:0;bottom:0;}
-.smoke-ball:nth-child(2){width:280px;height:76px;left:120px;bottom:-6px;}
-.smoke-ball:nth-child(3){width:220px;height:64px;left:260px;bottom:2px;}
+.smoke-ball:nth-child(1){
+  width:160px;
+  height:160px;
+  transform:translate(-50%,-50%);
+}
+.smoke-ball:nth-child(2){
+  width:130px;
+  height:130px;
+  transform:translate(-50%,-50%);
+  animation-delay:2.25s;
+}
+.smoke-ball:nth-child(3){
+  width:100px;
+  height:100px;
+  transform:translate(-50%,-50%);
+  animation-delay:2.3s;
+}
 
-@keyframes smokeGroundBlast{
-  0%{opacity:0;transform:scaleX(0.2) scaleY(0.4);}
-  20%{opacity:0.9;transform:scaleX(1) scaleY(1);}
-  100%{opacity:0;transform:scaleX(1.2) scaleY(0.8) translateY(-12px);}
+@keyframes smokeFromCenter{
+  0%{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(0.1);
+  }
+  25%{
+    opacity:0.85;
+    transform:translate(-50%,-50%) scale(1);
+  }
+  100%{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(1.6);
+  }
 }
 
 .btn-container{
@@ -207,7 +233,7 @@ body{
 @media(max-width:768px){
   .core-wrap{width:170px;height:170px;}
   .dev-name{font-size:24px;letter-spacing:3px;bottom:calc(100% + 12px);}
-  .smoke-wrap{transform:translate(-50%,200px);width:360px;}
+  .smoke-wrap{width:170px;height:170px;}
   .btn-container{
     left:4vw;
     transform:none;
@@ -223,6 +249,7 @@ body{
 <div class="star-bg"></div>
 <div class="yellow-circle"></div>
 
+<!-- 烟雾以核心中心为起点，在核心周围扩散 -->
 <div class="smoke-wrap">
   <div class="smoke-ball"></div>
   <div class="smoke-ball"></div>
